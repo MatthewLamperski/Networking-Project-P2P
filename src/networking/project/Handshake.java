@@ -39,9 +39,15 @@ public class Handshake {
         if((header.compareTo("P2PFILESHARINGPROJ") == 1) && (zeroes.compareTo("0000000000")) == 1){
             // Assign peer ID
             peerID = peerIDInt;
+            System.out.println("Recieved handshake message from peer # " + peerID + "\n");
         }
-        else{
-            // Wrong header or Handshake message format. Ignore message
+        else if((header.compareTo("P2PFILESHARINGPROJ") == 0)){
+            // Wrong header 
+            System.out.println("Header: " + header + " does not match: \"P2PFILESHARINGPROJ\"." + "\n");
+        }
+        else {
+            // Wrong zeroe bits 
+            System.out.println("Zeroe bits: " + zeroes + " do not match: \"0000000000\"." + "\n");
         }
     }
     
