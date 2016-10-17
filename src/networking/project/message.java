@@ -120,20 +120,21 @@ public class message {
         System.out.println("Message type:" + type);
         
         //Read Payload
-        if (length > 0) //payload exist, make payload byte array
+        if (length > 0) //payload exists, make payload byte array
         {
             payload = new byte[length];
+            totalBytes=0; //Reinitialize byte array position
+            bytes = 0; //Reinitialize byte read num
+            
+            while(totalBytes < length) //get the next bytes without error
+                {
+                bytes = input.read(payload, totalBytes, length - totalBytes);
+                totalBytes += bytes; 
+                } 
         }
         else //no payload
         {
             payload = null;
         }
-        totalBytes=0; //Reinitialize byte array position
-        bytes = 0; //Reinitialize byte read num
-        while(totalBytes < length) //get the next bytes without error
-        {
-            bytes = input.read(payload, totalBytes, length - totalBytes);
-            totalBytes += bytes; 
-        }  
     } 
 }
