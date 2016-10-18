@@ -1,5 +1,6 @@
 package networking.project;
 
+import java.util.BitSet;
 /**
  *
  * @author Cole
@@ -7,7 +8,7 @@ package networking.project;
 public class bitfield extends message{
     
     private boolean finished;
-    private boolean [] bit_field;
+    private BitSet bit_field;
     private final int BFlength;
     private int downloadedPieces;
     
@@ -16,21 +17,21 @@ public class bitfield extends message{
         //initial values
         finished = false;
         downloadedPieces = 0;
-        this.BFlength = this.getLength();
-        bit_field = new boolean[BFlength];
+        this.BFlength = this.getLength()*8; //retrieve from parent class, convert to num of bits
+        bit_field = new BitSet(BFlength);
         
         //initialize bit_field array
         for(int i = 0; i < BFlength; i++)
         {
-            bit_field[i] = false;
+            bit_field.set(i, false);
         }
     }
-    
     public synchronized void bitDownloaded(int pieceIndex)
     {
-        if(bit_field[pieceIndex] == false)
+        if(bit_field.get(pieceIndex) == false)
         {
-            bit_field[pieceIndex] = true;
+            bit_field.set(pieceIndex, true);
+            downloadedPieces++;
         }
         
         if(downloadedPieces == BFlength)
@@ -44,7 +45,27 @@ public class bitfield extends message{
     }
     public synchronized void readBitfield()
     {
-        
+        downloadedPieces = 0;
+        for(int i = 0; i < BFlength; i++)
+        {
+            int byteIndex = i/8; //select byte
+            int pieceIndex = i%8; //select bit in byte
+            
+            byte[] payload = this.getPayload(); //retrieve from parent class message
+            
+            if((payload[byteIndex] & (1 << pieceIndex)) == 0) //break down to bit, bit is 0
+            {
+                bit_field.set(i, false);
+            }
+            else //bit is 1
+            {
+                bit_field.set(i, true);
+                downloadedPieces++;
+            }
+        }
     }
-    public synchronized void 
+    public synchronized byte[] writeBitfield()
+    {
+        return bit_field.toByteArray();
+    }
 }
