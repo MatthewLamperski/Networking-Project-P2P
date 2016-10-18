@@ -16,10 +16,7 @@ public class piece extends message{
     {
         byte[] Payload = getPayload();
         byte[] pieceIDInBytes = new byte[4];
-        for(int i = 0; i < pieceIDInBytes.length; i++)
-        {
-            pieceIDInBytes[i] = Payload[i];
-        }
+        System.arraycopy(Payload, 0, pieceIDInBytes, 0, pieceIDInBytes.length);
         this.pieceID = ByteBuffer.wrap(pieceIDInBytes).getInt();
         
         this.pieceInBytes = new byte[this.getLength()-4];
