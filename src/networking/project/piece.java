@@ -7,12 +7,12 @@ import java.nio.ByteBuffer;
  * 
  * @author Cole
  */
-public class piece extends message{
+public class Piece extends Message{
     
     private final int pieceID;
     private final byte[] pieceInBytes;
     
-    public piece ()
+    public Piece ()
     {
         byte[] Payload = getPayload();
         byte[] pieceIDInBytes = new byte[4];
@@ -25,26 +25,17 @@ public class piece extends message{
             this.pieceInBytes[i] = Payload[i+4];
         }
     }
-    public piece (int ID, byte[] piece)
+    public Piece (int ID, byte[] piece)
     {
         this.pieceID = ID;
         this.pieceInBytes= piece;
-    }
-    public byte[] writePiece()
-    {
-        byte[] pieceToSend = new byte[pieceInBytes.length+4];
-        byte[] pieceIDinBytes = ByteBuffer.allocate(4).putInt(pieceID).array();
-                
-        for(int i = 0; i < 4; i++)
-        {
-            pieceToSend[i] = pieceIDinBytes[i];
-        }
-        for(int i = 0; i < pieceInBytes.length; i++)
-        {
-            pieceToSend[i+4] = pieceInBytes[i];
-        }
-        
-        return pieceToSend;
+        byte[] pieceToSend = new byte[this.pieceInBytes.length+4];
+        byte[] pieceIDinBytes = ByteBuffer.allocate(4).putInt(this.pieceID).array();
+        System.arraycopy(pieceIDinBytes, 0, pieceToSend, 0, 4);
+        System.arraycopy(this.pieceInBytes, 0, pieceToSend, 4, this.pieceInBytes.length);
+        this.setPayload(pieceToSend);
+        this.setLength(piece.length+4);
+        this.setType(7);
     }
     public byte [] getPieceInBytes()
     {

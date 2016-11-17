@@ -4,7 +4,7 @@ import java.io.*;
 import java.net.*;
 import java.nio.ByteBuffer;
 
-public class message {
+public class Message {
     
     /*After handshaking, each peer can send a stream of actual messages. 
     An actual message consists of 4-byte message length field, 

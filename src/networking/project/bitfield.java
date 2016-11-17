@@ -5,14 +5,14 @@ import java.util.BitSet;
  *
  * @author Cole
  */
-public class bitfield extends message{
+public class Bitfield extends Message{
     
     private boolean finished;
     private BitSet bit_field;
     private final int BFlength;
     private int downloadedPieces;
     
-    public bitfield()
+    public Bitfield()
     {
         //initial values
         finished = false;
