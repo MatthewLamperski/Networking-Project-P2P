@@ -1,25 +1,40 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package networking.project;
 
-import java.io.*;
-import java.net.*;
 import java.nio.ByteBuffer;
-import java.util.HashSet;
-import java.util.Set;
-/**
+/*
  *
- * @author sarah
+ * ‘request’ messages have a payload which consists of a 4-byte piece index field. Note
+ * that ‘request’ message payload defined here is different from that of BitTorrent. We
+ * don’t divide a piece into smaller subpieces.
+ * 
+ * @author sarah and cole
  */
-public class Request extends message{
+public class Request extends Message{
     
-    public void Request(byte[] indexfield){
-        this.setLength(9);
-        this.setType(4);
-        this.setPayload(indexfield);
-        
+    private final int pieceID;
+    private final byte[] requestPayload;
+    
+    public Request(int pieceID)
+    {
+        this.pieceID = pieceID;
+        //this.setLength(4);
+        this.setType(6);
+        requestPayload = ByteBuffer.allocate(4).putInt(this.pieceID).array();
+        this.setPayload(requestPayload);
+    }
+    public Request()
+    {
+        this.requestPayload = new byte[4];
+        System.arraycopy(this.getPayload(), 0, this.requestPayload, 0, this.requestPayload.length);
+        this.pieceID = ByteBuffer.wrap(requestPayload).getInt();
+    }
+    public byte [] getRequestPayload()
+    {
+        return requestPayload;
+    }
+    public int getPieceID()
+    {
+        return pieceID;
     }
 }
+    

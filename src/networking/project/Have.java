@@ -1,25 +1,35 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package networking.project;
 
-import java.io.*;
-import java.net.*;
 import java.nio.ByteBuffer;
-import java.util.HashSet;
-import java.util.Set;
-/**
+/*
  *
- * @author sarah
+ * @author sarah and cole
  */
-public class Have extends message{
+public class Have extends Message{
     
-    public void Have(byte[] indexfield){
-        this.setLength(9);
+    private final int pieceID;
+    private final byte[] requestPayload;
+    
+    public Have(int pieceID)
+    {
+        this.pieceID = pieceID;
+        //this.setLength(4);
         this.setType(4);
-        this.setPayload(indexfield);
-        
+        requestPayload = ByteBuffer.allocate(4).putInt(this.pieceID).array();
+        this.setPayload(requestPayload);
+    }
+    public Have()
+    {
+        this.requestPayload = new byte[4];
+        System.arraycopy(this.getPayload(), 0, this.requestPayload, 0, this.requestPayload.length);
+        this.pieceID = ByteBuffer.wrap(requestPayload).getInt();
+    }
+    public byte [] getRequestPayload()
+    {
+        return requestPayload;
+    }
+    public int getPieceID()
+    {
+        return pieceID;
     }
 }
