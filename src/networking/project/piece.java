@@ -45,4 +45,13 @@ public class Piece extends Message{
     {
         return pieceID;
     }
+    public byte [] getPieceInBytesNoID()
+    {
+        byte[] b = new byte[pieceInBytes.length-4];
+        for (int i = 0; i < b.length; i++)
+        {
+            b[i] = pieceInBytes[i+4];
+        }
+        return b;
+    }
 }
